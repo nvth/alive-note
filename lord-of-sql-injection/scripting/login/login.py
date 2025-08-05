@@ -3,7 +3,7 @@ import requests
 
 def get_cookie():
     uid = 'nvth'
-    upw = 'Vboync1997'
+    upw = 'pass'
 
     session = requests.Session() 
 
